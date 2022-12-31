@@ -30,13 +30,20 @@ ShouldClose :: proc() -> bool
 	return bool(glfw.WindowShouldClose(window));
 }
 
+ClearScreen :: proc(color: Color_t)
+{
+	gl.ClearColor(ColorChannelToF32(color.r), ColorChannelToF32(color.g), ColorChannelToF32(color.b), ColorChannelToF32(color.a));
+	gl.Clear(gl.COLOR_BUFFER_BIT);
+}
+
 Update :: proc()
 {
+	@(static) colorIndex: int;
+	
 	glfw.PollEvents();
 	programTime := cast(u64)(glfw.GetTime() * 1000);
 	
-	gl.ClearColor(1, OscillateBy32(programTime, 0, 1, 4000), 1, 1);
-	gl.Clear(gl.COLOR_BUFFER_BIT);
+	ClearScreen(GetPredefPalColorByIndex(programTime / 1000));
 	glfw.SwapBuffers(window);
 }
 
@@ -44,12 +51,9 @@ main :: proc()
 {
 	PrintLine_D("Hello from Odin! %v", 100);
 	
-	testRec1 := NewReci(0, 0, 100, 100);
-	testRec2 := NewReci(10, 20, 100, 100);
-	// testVec := v2i{105, 50};
-	// testRec = RecShift(testRec, v2i{10, 10});
-	// isInside := IsInsideRec(testRec, testVec);
-	// PrintLine_D("IsInside: %v", isInside);
+	color: Color_t;
+	color = NewColor(255, 255.0, 255, 255);
+	PrintLine_D("color: %v", color);
 	
 	Initialize();
 	defer glfw.Terminate();
