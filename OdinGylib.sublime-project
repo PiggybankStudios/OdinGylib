@@ -1,0 +1,25 @@
+{
+	"folders":
+	[
+		{
+			"path": ".",
+			"folder_exclude_patterns":
+			[
+				"build",
+				"lib",
+			],
+		},
+		{
+			"path": "./build",
+			"folder_exclude_patterns":
+			[
+				"temp",
+			],
+			"file_exclude_patterns":
+			[
+				"*.exe",
+				"*.pdb",
+			],
+		},
+	]
+}

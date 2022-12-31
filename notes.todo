@@ -1,0 +1,294 @@
+
+# Odin Notes:
+	[ ] Odin is installed in ~/Documents/MyStuff/Programs/Odin/
+	[?] Can we have semicolons?
+	[?] Can we have curly brackets on new line?
+	[ ] fmt.println (Can we rename fmt? Can we print without newline char?)
+	[ ] Compile invocation:
+		@ odin build "path/to/file.odin"
+	[ ] https://gist.github.com/SorenSaket/155afe1ec11a79def63341c588ade329
+	[ ] https://pkg.odin-lang.org/vendor/OpenGL
+	[ ] https://pkg.odin-lang.org/vendor/glfw/bindings/
+
+# odin --help
+	odin is a tool for managing Odin source code
+	Usage:
+		odin command [arguments]
+	Commands:
+		build     compile .odin file, or directory of .odin files, as an executable.
+		  one must contain the program's entry point, all must be in the same package.
+		run       same as 'build', but also then runs the newly compiled executable.
+		check     parse and type check .odin file
+		query     parse, type check, and output a .json file containing information about the program
+		doc       generate documentation .odin file, or directory of .odin files
+		version   print version
+		report    print information useful to reporting a bug
+	For further details on a command, use -help after the command name
+		e.g. odin build -help
+
+# Core Library
+	bufio
+	bytes
+	c
+		frontend/preprocessor
+		frontend/tokenizer
+		libc
+	compress // package compress is a collection of utilities to aid with other compression packages
+		gzip
+		shoco // package shoco is an implementation of the shoco short string compressor
+		zlib
+	container
+		bit_array
+		lru
+		priority_queue
+		queue
+		small_array
+	crypto
+		blake
+		blake2b
+		blake2s
+		chacha20
+		chacha20poly1305
+		gost
+		groestl
+		haval
+		jh
+		keccak
+		md2
+		md4
+		md5
+		poly1305
+		ripemd
+		sha1
+		sha2
+		sha3
+		shake
+		sm3
+		streebog
+		tiger
+		tiger2
+		util
+		whirlpool
+		x25519
+	dynlib
+	encoding
+		base32
+		base64
+		csv // package csv reads and writes comma-separated values (CSV) files.
+		entity
+		hxa // Implementation of the HxA 3D asset format
+		json
+		varint // Implementation of the LEB128 variable integer encoding as used by DWARF encoding and DEX files, among others.
+		xml // An XML 1.0 / 1.1 parser
+	fmt // package fmt implemented formatted I/O with procedures similar to C's printf and Python's format.
+	hash
+	image // package image implements a general 2D image library to be used with other image related packages
+		netpbm
+		png
+		qoi // package qoi implements a QOI image reader
+		tga // package tga implements a TGA image writer for 8-bit RGB and RGBA images.
+	io // package io provides basic interfaces for generic data stream primitives.
+	log
+	math
+		big // A BigInt implementation in Odin.
+		bits
+		fixed
+		linalg // core:math/linalg implements linear algebra procedures useful for 3D spatial transformations
+		linalg/glsl // core:math/linalg/glsl implements a GLSL-like mathematics library plus numerous other utility procedures
+		linalg/hlsl // core:math/linalg/hlsl implements a HLSL-like mathematics library plus numerous other utility procedures
+		noise // OpenSimplex2 noise implementation.
+		rand
+	mem // package mem implements various types of allocators.
+		virtual
+	odin
+		ast
+		doc-format
+		format
+		parser
+		printer
+		tokenizer
+	os
+	path
+		filepath // The path/filepath package uses either forward slashes or backslashes depending on the operating system
+		slashpath // The slashpath package is only to be used for paths separated by forward slashes,
+	reflect
+	runtime // This is the runtime code required by the compiler
+	simd
+	slice
+		heap // Package implements a generic max heap in-place on a slice for any type.
+	sort
+	strconv
+		decimal // Multiple precision decimal numbers
+	strings // simple procedures to manipulate UTF-8 encoded strings
+	sync
+	testing
+	text
+		i18n
+		scanner // package text/scanner provides a scanner and tokenizer for UTF-8-encoded text.
+	thread
+	time
+	unicode
+		utf16
+		utf8
+		utf8/utf8string
+
+# Vendor Libraries
+	ENet
+	OpenEXRCore
+	OpenGL
+	cgltf
+	commonmark // Bindings against CMark (https://github.com/commonmark/cmark)
+	darwin
+		Foundation
+		Metal
+		QuartzCore
+	directx
+		d3d11
+		d3d12
+		d3d_compiler
+		dxgi
+	ggpo
+	glfw
+		bindings
+	microui
+	miniaudio
+	portmidi
+	raylib
+	sdl2
+		image
+		mixer
+		net
+		ttf
+	stb
+		easy_font
+		image
+		rect_pack
+		truetype
+		vorbis
+	vulkan
+	zlib
+
+# odin build --help
+	odin build [arguments]
+	build  compile .odin file, or directory of .odin files, as an executable.
+	       one must contain the program's entry point, all must be in the same package.
+	Flags
+	-out:<filepath>
+		Set the file name of the outputted executable
+		Example: -out:foo.exe
+	-opt:<integer>
+		Set the optimization level for compilation
+		Accepted values: 0, 1, 2, 3
+		Example: -opt:2
+	-o:<string>
+		Set the optimization mode for compilation
+		Accepted values: minimal, size, speed
+		Example: -o:speed
+	-show-timings
+		Shows basic overview of the timings of different stages within the compiler in milliseconds
+	-show-more-timings
+		Shows an advanced overview of the timings of different stages within the compiler in milliseconds
+	-export-timings:<format>
+		Export timings to one of a few formats. Requires `-show-timings` or `-show-more-timings`
+		Available options:
+			-export-timings:json  Export compile time stats to JSON
+			-export-timings:csv   Export compile time stats to CSV
+	-export-timings-file:<filename>
+		Specify the filename for `-export-timings`
+		Example: -export-timings-file:timings.json
+	-thread-count:<integer>
+		Override the number of threads the compiler will use to compile with
+		Example: -thread-count:2
+	-keep-temp-files
+		Keeps the temporary files generated during compilation
+	-collection:<name>=<filepath>
+		Defines a library collection used for imports
+		Example: -collection:shared=dir/to/shared
+		Usage in Code:
+			import "shared:foo"
+	-define:<name>=<expression>
+		Defines a global constant with a value
+		Example: -define:SPAM=123
+	-build-mode:<mode>
+		Sets the build mode
+		Available options:
+			-build-mode:exe       Build as an executable
+			-build-mode:dll       Build as a dynamically linked library
+			-build-mode:shared    Build as a dynamically linked library
+			-build-mode:obj       Build as an object file
+			-build-mode:object    Build as an object file
+			-build-mode:assembly  Build as an object file
+			-build-mode:assembler Build as an assembly file
+			-build-mode:asm       Build as an assembly file
+			-build-mode:llvm-ir   Build as an LLVM IR file
+			-build-mode:llvm      Build as an LLVM IR file
+	-target:<string>
+		Sets the target for the executable to be built in
+	-debug
+		Enabled debug information, and defines the global constant ODIN_DEBUG to be 'true'
+	-disable-assert
+		Disable the code generation of the built-in run-time 'assert' procedure, and defines the global constant ODIN_DISABLE_ASSERT to be 'true'
+	-no-bounds-check
+		Disables bounds checking program wide
+	-no-crt
+		Disables automatic linking with the C Run Time
+	-lld
+		Use the LLD linker rather than the default
+	-use-separate-modules [EXPERIMENTAL]
+		The backend generates multiple build units which are then linked together
+		Normally, a single build unit is generated for a standard project
+	-no-threaded-checker
+		Disabled multithreading in the semantic checker stage
+	-vet
+		Do extra checks on the code
+		Extra checks include:
+			Variable shadowing within procedures
+			Unused declarations
+	-vet-extra
+		Do even more checks than standard vet on the code
+		To treat the extra warnings as errors, use -warnings-as-errors
+	-ignore-unknown-attributes
+		Ignores unknown attributes
+		This can be used with metaprogramming tools
+	-no-entry-point
+		Removes default requirement of an entry point (e.g. main procedure)
+	-extra-linker-flags:<string>
+		Adds extra linker specific flags in a string
+	-extra-assembler-flags:<string>
+		Adds extra assembler specific flags in a string
+	-microarch:<string>
+		Specifies the specific micro-architecture for the build in a string
+		Examples:
+			-microarch:sandybridge
+			-microarch:native
+	-disallow-do
+		Disallows the 'do' keyword in the project
+	-default-to-nil-allocator
+		Sets the default allocator to be the nil_allocator, an allocator which does nothing
+	-strict-style
+		Errs on unneeded tokens, such as unneeded semicolons
+	-strict-style-init-only
+		Errs on unneeded tokens, such as unneeded semicolons, only on the initial project
+	-ignore-warnings
+		Ignores warning messages
+	-warnings-as-errors
+		Treats warning messages as error messages
+	-verbose-errors
+		Prints verbose error messages showing the code on that line and the location in that line
+	-ignore-vs-search
+		[Windows only]
+		Ignores the Visual Studio search for library paths
+	-resource:<filepath>
+		[Windows only]
+		Defines the resource file for the executable
+		Example: -resource:path/to/file.rc
+	-pdb-name:<filepath>
+		[Windows only]
+		Defines the generated PDB name when -debug is enabled
+		Example: -pdb-name:different.pdb
+	-subsystem:<option>
+		[Windows only]
+		Defines the subsystem for the application
+		Available options:
+			console
+			windows

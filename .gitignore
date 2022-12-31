@@ -1,0 +1,8 @@
+
+/build/*
+!build/build.bat
+!build/*.py
+
+/data/*.exe
+
+*.sublime-workspace
